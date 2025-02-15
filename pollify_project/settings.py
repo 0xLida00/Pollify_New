@@ -27,7 +27,7 @@ SECRET_KEY = 'django-insecure-e!43f16-5n6^r^03$e+sqju-kj)!e$$d*l+h&_+s^(1jaq=a9w
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['127.0.0.1', 'localhost']
+ALLOWED_HOSTS = ['127.0.0.1', 'localhost', 'pollify-polls-projects.onrender.com']
 
 # Login and Logout settings
 LOGIN_URL = '/login/'
