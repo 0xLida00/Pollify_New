@@ -1,0 +1,93 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-5">
+    <h2>Admin Dashboard</h2>
+
+    <!-- Overview Cards -->
+    <div class="row mt-4">
+        <div class="col-md-4">
+            <div class="card bg-primary text-white text-center">
+                <div class="card-body">
+                    <h4 class="card-title">Total Users</h4>
+                    <p class="card-text">{{ user_count }}</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card bg-success text-white text-center">
+                <div class="card-body">
+                    <h4 class="card-title">Total Polls</h4>
+                    <p class="card-text">{{ poll_count }}</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card bg-info text-white text-center">
+                <div class="card-body">
+                    <h4 class="card-title">Total Comments</h4>
+                    <p class="card-text">{{ comment_count }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Recent Activity Logs -->
+    <h3 class="mt-5">Activity Logs</h3>
+    <table class="table table-striped mt-3">
+        <thead>
+            <tr>
+                <th>User</th>
+                <th>Action</th>
+                <th>Timestamp</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for log in recent_activity %}
+            <tr>
+                <td>{{ log.user }}</td>
+                <td>{{ log.action }}</td>
+                <td>{{ log.timestamp|date:"F j, Y, g:i a" }}</td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="3" class="text-center">No recent activity found.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <!-- Pagination Links -->
+    {% if recent_activity.has_other_pages %}
+    <nav class="mt-4">
+        <ul class="pagination justify-content-center">
+            {% if recent_activity.has_previous %}
+                <li class="page-item">
+                    <a class="page-link" href="?page=1">&laquo; First</a>
+                </li>
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ recent_activity.previous_page_number }}">Previous</a>
+                </li>
+            {% endif %}
+
+            {% for num in recent_activity.paginator.page_range %}
+                {% if num == recent_activity.number %}
+                    <li class="page-item active"><span class="page-link">{{ num }}</span></li>
+                {% elif num >= recent_activity.number|add:'-2' and num <= recent_activity.number|add:'2' %}
+                    <li class="page-item"><a class="page-link" href="?page={{ num }}">{{ num }}</a></li>
+                {% endif %}
+            {% endfor %}
+
+            {% if recent_activity.has_next %}
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ recent_activity.next_page_number }}">Next</a>
+                </li>
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ recent_activity.paginator.num_pages }}">Last &raquo;</a>
+                </li>
+            {% endif %}
+        </ul>
+    </nav>
+    {% endif %}
+</div>
+{% endblock %}
