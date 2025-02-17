@@ -212,17 +212,19 @@ def vote_poll(request, pk):
 @login_required
 def toggle_follow(request, user_id):
     if request.method == "POST":
-        user_to_toggle = get_object_or_404(User, id=user_id)
+        author = get_object_or_404(User, id=user_id)
 
-        with transaction.atomic():  # Ensures the transaction is completed before returning a response
-            existing_follow = Follow.objects.filter(follower=request.user, followed=user_to_toggle).first()
+        # Avoid IntegrityError by ensuring state consistency
+        existing_follow = Follow.objects.filter(follower=request.user, followed=author).first()
 
-            if existing_follow:
-                existing_follow.delete()
-                return JsonResponse({"success": True, "action": "unfollow"})
-            else:
-                Follow.objects.create(follower=request.user, followed=user_to_toggle)
-                return JsonResponse({"success": True, "action": "follow"})
+        if existing_follow:
+            # Already following, so unfollow
+            existing_follow.delete()
+            return JsonResponse({"success": True, "action": "unfollow"})
+        else:
+            # Not following yet, so follow
+            Follow.objects.get_or_create(follower=request.user, followed=author)  # Avoid duplicate creation
+            return JsonResponse({"success": True, "action": "follow"})
 
     return JsonResponse({"success": False}, status=400)
 

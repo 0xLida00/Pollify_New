@@ -6,34 +6,27 @@ document.addEventListener("DOMContentLoaded", function () {
             const button = form.querySelector("button");
             const csrfToken = this.querySelector("input[name=csrfmiddlewaretoken]").value;
 
-            // Disable the button to prevent multiple clicks
-            button.disabled = true;
+            button.disabled = true; // Prevent multiple clicks
 
             fetch(this.action, {
                 method: "POST",
                 headers: {
                     "X-CSRFToken": csrfToken,
                     "Content-Type": "application/json",
+                    "Cache-Control": "no-cache", // Prevent caching
                 },
+                cache: "no-store",
             })
-                .then((response) => {
-                    if (!response.ok) {
-                        throw new Error("Network response was not ok");
-                    }
-                    return response.json();
-                })
+                .then((response) => response.json())
                 .then((data) => {
                     if (data.success) {
-                        // Update the button's appearance based on the new state
-                        if (data.action === "follow") {
-                            button.classList.remove("btn-success");
-                            button.classList.add("btn-danger");
-                            button.textContent = "Unfollow";
-                        } else {
-                            button.classList.remove("btn-danger");
-                            button.classList.add("btn-success");
-                            button.textContent = "Follow";
-                        }
+                        fetch(window.location.href, { cache: "no-store" })  // Ensure latest follow state is fetched
+                            .then(res => res.text())
+                            .then((html) => {
+                                let doc = new DOMParser().parseFromString(html, "text/html");
+                                let newButton = doc.querySelector(".follow-form button");
+                                button.outerHTML = newButton.outerHTML; // Replace button to reflect correct state
+                            });
                     } else {
                         alert("An error occurred. Please try again.");
                     }
@@ -43,7 +36,6 @@ document.addEventListener("DOMContentLoaded", function () {
                     alert("An error occurred. Please try again.");
                 })
                 .finally(() => {
-                    // Re-enable the button after the request completes
                     button.disabled = false;
                 });
         });
