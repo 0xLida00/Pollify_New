@@ -1,3 +1,4 @@
+from django.db import transaction
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
@@ -211,19 +212,17 @@ def vote_poll(request, pk):
 @login_required
 def toggle_follow(request, user_id):
     if request.method == "POST":
-        author = get_object_or_404(User, id=user_id)
+        user_to_toggle = get_object_or_404(User, id=user_id)
 
-        # Avoid IntegrityError by ensuring state consistency
-        existing_follow = Follow.objects.filter(follower=request.user, followed=author).first()
+        with transaction.atomic():  # Ensures the transaction is completed before returning a response
+            existing_follow = Follow.objects.filter(follower=request.user, followed=user_to_toggle).first()
 
-        if existing_follow:
-            # Already following, so unfollow
-            existing_follow.delete()
-            return JsonResponse({"success": True, "action": "unfollow"})
-        else:
-            # Not following yet, so follow
-            Follow.objects.get_or_create(follower=request.user, followed=author)  # Avoid duplicate creation
-            return JsonResponse({"success": True, "action": "follow"})
+            if existing_follow:
+                existing_follow.delete()
+                return JsonResponse({"success": True, "action": "unfollow"})
+            else:
+                Follow.objects.create(follower=request.user, followed=user_to_toggle)
+                return JsonResponse({"success": True, "action": "follow"})
 
     return JsonResponse({"success": False}, status=400)
 
