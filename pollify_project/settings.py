@@ -102,6 +102,10 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
+# CACHE SETTINGS (Prevents Follow State Reset)
+CACHE_MIDDLEWARE_SECONDS = 0  # Forces fresh database reads
+CACHE_MIDDLEWARE_KEY_PREFIX = "pollify"
+
 ROOT_URLCONF = 'pollify_project.urls'
 
 TEMPLATES = [
@@ -133,12 +137,28 @@ AUTH_USER_MODEL = 'users.User'
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
 DATABASES = {
-    "default": dj_database_url.config(default=f"sqlite:///{BASE_DIR / 'db.sqlite3'}")
+    "default": dj_database_url.config(default=f"sqlite:///{BASE_DIR / 'db.sqlite3'}", conn_max_age=600)
     }
 
-if os.getenv("DATABASE_URL"):
-    DATABASES["default"] = dj_database_url.config()
+# Force PostgreSQL in production (Render)
+if os.getenv("RENDER") or os.getenv("DATABASE_URL"):
+    DATABASES["default"] = dj_database_url.config(conn_max_age=600, ssl_require=True)
 
+SESSION_ENGINE = "django.contrib.sessions.backends.db"  # Store session data in DB
+SESSION_COOKIE_SECURE = not DEBUG  # Secure cookies in production
+SESSION_EXPIRE_AT_BROWSER_CLOSE = False  # Keep session even after browser closes
+
+# Ensure session storage is migrated
+if os.getenv("RENDER"):
+    os.system("python manage.py migrate sessions")
+
+# SECURITY & CSRF SETTINGS
+SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")  # Ensure correct HTTPS detection
+SECURE_SSL_REDIRECT = not DEBUG  # Redirect all HTTP traffic to HTTPS in production
+
+# CSRF and CORS trusted origins (prevents CSRF token issues)
+CSRF_TRUSTED_ORIGINS = ["https://pollify-polls-projects.onrender.com"]
+CORS_ALLOWED_ORIGINS = ["https://pollify-polls-projects.onrender.com"]
 
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators
