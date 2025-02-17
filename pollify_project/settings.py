@@ -148,10 +148,6 @@ SESSION_ENGINE = "django.contrib.sessions.backends.db"  # Store session data in 
 SESSION_COOKIE_SECURE = not DEBUG  # Secure cookies in production
 SESSION_EXPIRE_AT_BROWSER_CLOSE = False  # Keep session even after browser closes
 
-# Ensure session storage is migrated
-if os.getenv("RENDER"):
-    os.system("python manage.py migrate sessions")
-
 # SECURITY & CSRF SETTINGS
 SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")  # Ensure correct HTTPS detection
 SECURE_SSL_REDIRECT = not DEBUG  # Redirect all HTTP traffic to HTTPS in production
