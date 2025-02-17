@@ -8,7 +8,7 @@
         <!-- Handle missing profile picture with a default fallback -->
         {% if user.profile_picture and user.profile_picture.url %}
             <img class="rounded-circle account-img mb-3" 
-                 src="{{ user.profile_picture.url }}" 
+                 src="{{ user.get_profile_picture_url }}" 
                  alt="Profile Image" width="150" height="150">
         {% else %}
             <img class="rounded-circle account-img mb-3" 
@@ -29,7 +29,7 @@
             <h5 class="mb-1 text-success"><strong>{{ followers }}</strong></h5>
             <p><strong>Followers</strong></p>
         </div>
-        <div class="vr mx-3"></div> <!-- Vertical separator -->
+        <div class="vr mx-3"></div>
         <div class="text-center mx-3">
             <h5 class="mb-1 text-info"><strong>{{ following }}</strong></h5>
             <p><strong>Following</strong></p>

@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import authenticate, login, logout, update_session_auth_hash
 from django.contrib.auth.decorators import login_required
+from django.middleware.csrf import get_token
 from django.contrib import messages
 from django.http import JsonResponse
 from django.contrib.auth.forms import PasswordChangeForm
@@ -19,7 +20,6 @@ def signup(request):
         form = CustomSignupForm()
     return render(request, 'users/signup.html', {'form': form})
 
-
 def user_login(request):
     if request.method == 'POST':
         username = request.POST.get('username')
@@ -32,7 +32,6 @@ def user_login(request):
         else:
             messages.error(request, "Invalid username or password.")
     return render(request, 'users/login.html')
-
 
 @login_required
 def profile(request, username):
@@ -73,8 +72,6 @@ def profile(request, username):
             'is_following': is_following
         })
 
-
-# Follow/Unfollow Author or User Profile
 @login_required
 def toggle_follow(request, user_id):
     if request.method == "POST":
@@ -94,12 +91,10 @@ def toggle_follow(request, user_id):
 
     return JsonResponse({"success": False}, status=400)
 
-
 def user_logout(request):
     logout(request)
     messages.success(request, "You have been logged out.")
     return redirect('login')
-
 
 @login_required
 def password_change(request):
@@ -117,7 +112,6 @@ def password_change(request):
         form = PasswordChangeForm(user=request.user)
 
     return render(request, 'users/password_change.html', {'form': form})
-
 
 @login_required
 def update_profile(request):

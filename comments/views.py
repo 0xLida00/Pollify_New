@@ -13,13 +13,12 @@ def add_comment(request, poll_id):
     """Add a new comment to a poll."""
     if request.method == "POST":
         poll = get_object_or_404(Poll, id=poll_id)
-        content = request.POST.get("content", "").strip()  # Remove leading/trailing whitespace
-        if content:  # Ensure content is not empty
+        content = request.POST.get("content", "").strip()
+        if content:
             Comment.objects.create(poll=poll, author=request.user, content=content)
             # Log the activity here
             log_activity(request.user, f"Added a comment to poll: {poll.question}")
         return redirect("poll_detail", pk=poll_id)
-
 
 @csrf_exempt
 @login_required
@@ -29,13 +28,11 @@ def vote_comment(request, comment_id, vote_type):
     user = request.user
 
     try:
-        # Use `get_or_create` to handle cases where there might be a race condition
         comment_vote, created = CommentVote.objects.get_or_create(user=user, comment=comment, defaults={'vote_type': vote_type})
 
         if not created:
             # User has already voted; check if they are trying to change their vote
             if comment_vote.vote_type == vote_type:
-                # Silently return if the same vote is submitted
                 return JsonResponse({"success": True, "upvotes": comment.upvotes, "downvotes": comment.downvotes})
 
             # Update vote type and adjust counts

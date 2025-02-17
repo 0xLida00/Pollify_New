@@ -47,7 +47,7 @@ Pollify is an interactive social polling platform that allows users to create, s
 #### Following System
 - Follow other users to stay updated.
 - Receive notifications for followed user activities.
-- View my followers and followings list.
+- View my followers and followings.
 
 #### Notifications
 - Receive notifications for comments on my poll.
@@ -65,7 +65,7 @@ Pollify is an interactive social polling platform that allows users to create, s
 - Change my email and password securely.
 - View my poll history and participation.
 
-#### User Engagement
+#### User Engagement *(for future development)*
 - Like or share polls.
 - Report inappropriate content.
 
@@ -79,20 +79,20 @@ Pollify is an interactive social polling platform that allows users to create, s
 - Assign/revoke admin privileges.
 - Reset user passwords.
 
-#### Poll Moderation
-- View and delete flagged polls.
-- Edit polls violating guidelines.
-- Moderate comments.
-
-#### Analytics and Reports
-- View poll engagement analytics.
-- Generate reports on poll popularity.
-- Send announcements to users.
-
 #### System Management
 - Configure poll visibility and security policies.
 - Manage the database of polls and users.
 - Oversee profile picture storage.
+
+#### Poll Moderation *(for future development)*
+- View and delete flagged polls.
+- Edit polls violating guidelines.
+- Moderate comments.
+
+#### Analytics and Reports *(for future development)*
+- View poll engagement analytics.
+- Generate reports on poll popularity.
+- Send announcements to users.
 
 ---
 
@@ -138,13 +138,13 @@ Pollify is an interactive social polling platform that allows users to create, s
 ### 8. Admin Dashboard
 - View/manage users, polls, and comments
 - Analytics (poll engagement, top users)
-- Reports and content moderation
 
 ### 9. Search and Filtering
 - Search polls by keyword
 - Filter polls by category, date, or popularity
 
-### 10. Reporting & Moderation
+### 10. Reporting & Moderation *(for future development)*
+- - Reports and content moderation
 - Report abusive polls or comments
 - Admin review and decision-making
 - Automated moderation tools (e.g., content flagging)
@@ -182,12 +182,8 @@ To modularize the project, following Django apps will be created:
 
 6. **`admin_panel`** (For administrative management and analytics)
    - Models: None (Uses Django admin)
-   - Views: Analytics dashboard, user moderation
    - Templates: Dashboard UI
 
 7. **`frontend`** (For UI presentation using HTML, CSS, and JS)
    - Static files: CSS, JS, Images
    - Templates: Base templates and homepage
-
-
-## Pollify Entity-Relationship Diagram

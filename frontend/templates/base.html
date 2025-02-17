@@ -31,8 +31,8 @@
                         <!-- Profile Picture -->
                         <div class="ml-3">
                             {% if user.profile_picture and user.profile_picture.url %}
-                                <a href="{{ user.profile_picture.url }}" target="_blank">
-                                    <img src="{{ user.profile_picture.url }}" alt="Profile Picture" class="rounded-circle profile-picture" width="40" height="40">
+                                <a href="{{ user.get_profile_picture_url }}" target="_blank">
+                                    <img src="{{ user.get_profile_picture_url }}" alt="Profile Picture" class="rounded-circle profile-picture" width="40" height="40">
                                 </a>
                             {% else %}
                                 <a href="{% static 'img/default.png' %}" target="_blank">

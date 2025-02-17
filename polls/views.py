@@ -9,7 +9,7 @@ from django.forms import ValidationError
 from django.urls import reverse_lazy
 from django.views.generic import ListView, CreateView, DetailView, DeleteView, UpdateView
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponseForbidden
 from django.db.models import Count
 from admin_panel.utils import log_activity
 from .models import Poll, Choice, Vote
@@ -32,7 +32,6 @@ def home(request):
         "recent_polls": recent_polls,
         "recent_comments": recent_comments
     })
-
 
 # List View for Polls with Pagination and Filtering
 class PollListView(ListView):
@@ -96,7 +95,6 @@ class PollListView(ListView):
 
         return context
 
-
 # Poll Creation View
 class PollCreateView(LoginRequiredMixin, CreateView):
     model = Poll
@@ -129,7 +127,6 @@ class PollCreateView(LoginRequiredMixin, CreateView):
         messages.success(self.request, "Poll created successfully!")
         return redirect(self.success_url)
 
-
 # Poll Detail View
 class PollDetailView(DetailView):
     model = Poll
@@ -161,7 +158,6 @@ class PollDetailView(DetailView):
 
         return context
 
-
 # Poll Detail View
 class PollEditView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     model = Poll
@@ -177,7 +173,6 @@ class PollEditView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
         messages.success(self.request, "Poll updated successfully!")
         return super().form_valid(form)
     
-
 # Handle Voting
 @login_required
 def vote_poll(request, pk):
@@ -212,7 +207,6 @@ def vote_poll(request, pk):
 
     return redirect("poll_detail", pk=poll.pk)
 
-
 # Follow/Unfollow Author
 @login_required
 def toggle_follow(request, user_id):
@@ -233,7 +227,6 @@ def toggle_follow(request, user_id):
 
     return JsonResponse({"success": False}, status=400)
 
-
 # Poll Deletion View
 class PollDeleteView(LoginRequiredMixin, DeleteView):
     model = Poll
@@ -243,6 +236,5 @@ class PollDeleteView(LoginRequiredMixin, DeleteView):
     def dispatch(self, request, *args, **kwargs):
         poll = self.get_object()
         if poll.author != request.user:
-            messages.error(request, "You do not have permission to delete this poll.")
-            return redirect("poll_list")
+            return HttpResponseForbidden("You do not have permission to delete this poll.")
         return super().dispatch(request, *args, **kwargs)

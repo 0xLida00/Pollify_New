@@ -30,14 +30,13 @@ Pollify is an interactive polling platform that allows users to create, vote, an
 
 ### 📊 Admin Panel
 - Admin dashboard for monitoring user activity
-- View and filter activity logs
+- View users activity logs
 - Manage polls, comments, and users
 
 ### 🔎 Search & Filtering
 - Search polls by keywords
 - Filter polls by categories
 - Filter inbox messages by read/unread status
-- Admin log filtering by user actions
 ---
 
 ## II/ 🛠️ Tech Stack
@@ -60,7 +59,7 @@ Pollify is an interactive polling platform that allows users to create, vote, an
 
 ### 1️⃣ Clone the Repository
 
-git clone https://github.com/your-username/pollify.git
+git clone https://github.com/0xLida00/Pollify_New
 cd pollify
 
 ### 2️⃣ Create & Activate Virtual Environment
@@ -91,14 +90,13 @@ python manage.py test
 ### Run specific app tests:
 python manage.py test messaging
 python manage.py test polls
+...
 ---
 
 ## V/ 📌 To-Do / Future Enhancements
 	•	Add poll analytics & insights
 	•	Implement poll sharing feature
-	•	Improve UI/UX for mobile responsiveness
 	•	Introduce more notification types
-	•	Enable real-time updates using WebSockets
 ---
 
 ### VI/ 🤝 Contribution
@@ -116,6 +114,7 @@ pollify_project/
 │── admin_panel/        # Admin dashboard module
 │── comments/           # Poll comment system
 │── frontend/           # frontend files/codes
+│── media/              # saving profile pics
 │── messaging/          # Private messaging system
 │── notifications/      # User notifications
 │── pollify_project/    # Django project settings
@@ -125,3 +124,4 @@ pollify_project/
 │── manage.py           # Django project management script
 │── requirements.txt    # Dependencies
 │── README.md           # Project documentation
+│── userstiry.md        

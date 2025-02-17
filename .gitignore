@@ -31,7 +31,6 @@ db.sqlite3
 *.log
 *.pid
 *.swp
-media/
 
 # Ignore migrations except __init__.py
 **/migrations/*.pyc
@@ -40,10 +39,6 @@ media/
 # Static files (build artifacts)
 staticfiles/
 static_root/
-
-# Media files (user uploads)
-media/
-media_root/
 
 # Local environment configuration
 .env

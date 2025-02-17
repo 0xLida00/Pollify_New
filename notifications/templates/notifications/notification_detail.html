@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h2>Notification Detail</h2>
+<p><strong>From:</strong> {{ notification.actor.username }}</p>
+<p><strong>Message:</strong> {{ notification.verb }}</p>
+<p><strong>Created At:</strong> {{ notification.created_at }}</p>
+
+{% if notification.target_poll %}
+    <p><strong>Poll:</strong> <a href="{{ notification.target_poll.get_absolute_url }}">{{ notification.target_poll.question }}</a></p>
+{% endif %}
+
+<a href="{% url 'notifications_list' %}">Back to Notifications</a>
+{% endblock %}

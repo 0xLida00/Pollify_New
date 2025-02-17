@@ -3,6 +3,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
 from django.contrib import messages as flash_messages
+from django.http import HttpResponseForbidden
 from .models import Message
 from .forms import ComposeMessageForm
 
@@ -33,7 +34,6 @@ def inbox(request):
         'filter_param': filter_param,
     })
 
-
 @login_required
 def outbox(request):
     """View for the user's sent messages."""
@@ -61,7 +61,7 @@ def compose_message(request):
             message.save()
             form.save_m2m()  # Save recipients
             flash_messages.success(request, 'Your message has been sent successfully.')
-            return redirect('messaging:inbox')  # Ensure redirection happens
+            return redirect('messaging:inbox')
     else:
         form = ComposeMessageForm(sender=request.user)
 
@@ -69,7 +69,6 @@ def compose_message(request):
         'form': form,
         'active_tab': 'compose',
     })
-
 
 @login_required
 def read_message(request, message_id):
@@ -86,13 +85,16 @@ def read_message(request, message_id):
         'active_tab': 'inbox',
     })
 
-
 @login_required
 def message_detail(request, message_id):
-    """View a specific message sent by the user."""
-    message = get_object_or_404(Message, id=message_id, sender=request.user)
-    
+    """View a specific message, allowing both senders and recipients access."""
+    message = get_object_or_404(Message, id=message_id)
+
+    # Allow access only if the user is the sender or a recipient
+    if request.user != message.sender and request.user not in message.recipients.all():
+        return HttpResponseForbidden("You do not have permission to view this message.")
+
     return render(request, 'messaging/message_detail.html', {
         'message': message,
-        'active_tab': 'outbox',
+        'active_tab': 'outbox' if request.user == message.sender else 'inbox',
     })

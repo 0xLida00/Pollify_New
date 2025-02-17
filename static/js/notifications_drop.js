@@ -1,7 +1,7 @@
 document.addEventListener('DOMContentLoaded', function () {
     console.log("🔽 Notifications JS Loaded");
 
-    // ✅ Ensure Bootstrap Dropdown is properly initialized
+    // Ensure Bootstrap Dropdown is properly initialized
     $('.dropdown-toggle').each(function () {
         let $dropdown = $(this);
         if (!$dropdown.data('bs.dropdown')) {
@@ -9,7 +9,7 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     });
 
-    // ✅ Handle dropdown toggle manually if needed
+    // Handle dropdown toggle manually if needed
     document.querySelectorAll('.dropdown-toggle').forEach(toggle => {
         toggle.addEventListener('click', function (event) {
             console.log("🔽 Dropdown Clicked");
@@ -17,7 +17,7 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     });
 
-    // ✅ Close dropdown when clicking outside
+    // Close dropdown when clicking outside
     document.addEventListener('click', function (event) {
         const openDropdown = document.querySelector('.dropdown.show');
         if (openDropdown && !openDropdown.contains(event.target)) {
@@ -26,7 +26,7 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     });
 
-    // ✅ Handle "Mark as Read" action via AJAX
+    // Handle "Mark as Read" action via AJAX
     document.addEventListener('click', function (event) {
         if (event.target.classList.contains('mark-as-read')) {
             event.preventDefault();
@@ -44,15 +44,15 @@ document.addEventListener('DOMContentLoaded', function () {
                 if (data.success) {
                     console.log(`✅ Notification ${notificationId} marked as read`);
                     event.target.closest('.list-group-item').classList.remove('bg-light');
-                    event.target.remove(); // Remove "Mark as Read" button
-                    updateNotificationBadgeCount(); // Update badge count
+                    event.target.remove();
+                    updateNotificationBadgeCount();
                 }
             })
             .catch(error => console.error('❌ Error marking notification as read:', error));
         }
     });
 
-    // ✅ Handle "Mark All as Read" action via AJAX
+    // Handle "Mark All as Read" action via AJAX
     document.getElementById('mark-all-as-read')?.addEventListener('click', function (event) {
         event.preventDefault();
 
@@ -75,7 +75,7 @@ document.addEventListener('DOMContentLoaded', function () {
         .catch(error => console.error('❌ Error marking all notifications as read:', error));
     });
 
-    // ✅ Function to update the notification badge count dynamically
+    // Function to update the notification badge count dynamically
     function updateNotificationBadgeCount(newCount = null) {
         const badge = document.querySelector('#notificationDropdown .notification-badge');
         if (badge) {
@@ -86,7 +86,7 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     }
 
-    // ✅ Helper function to get CSRF token
+    // Helper function to get CSRF token
     function getCookie(name) {
         const cookies = document.cookie.split('; ');
         for (let i = 0; i < cookies.length; i++) {

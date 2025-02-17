@@ -3,7 +3,7 @@
 {% block content %}
 <h2>{{ message.subject }}</h2>
 
-<p><strong>To:</strong> {{ message.recipient.username }}</p>
+<p><strong>To:</strong> {{ message.recipients.all|join:", " }}</p>
 <p><strong>Sent on:</strong> {{ message.sent_at|date:"M d, Y H:i" }}</p>
 
 <p>{{ message.body }}</p>
