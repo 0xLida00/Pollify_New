@@ -72,11 +72,15 @@ CRISPY_TEMPLATE_PACK = 'bootstrap4'
 ASGI_APPLICATION = "pollify_project.asgi.application"
 
 # Configure Redis for WebSocket communication
+# Use Upstash Redis URL from environment variable, fallback to local Redis for development
+REDIS_URL = os.getenv("REDIS_URL", "redis://127.0.0.1:6379")
+
+# Configure Redis for WebSocket communication
 CHANNEL_LAYERS = {
     "default": {
         "BACKEND": "channels_redis.core.RedisChannelLayer",
         "CONFIG": {
-            "hosts": [("127.0.0.1", 6379)],  # Ensure Redis is running
+            "hosts": [REDIS_URL],  # Use Upstash Redis dynamically
         },
     },
 }
