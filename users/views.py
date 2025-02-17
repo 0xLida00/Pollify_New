@@ -1,7 +1,6 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import authenticate, login, logout, update_session_auth_hash
 from django.contrib.auth.decorators import login_required
-from django.middleware.csrf import get_token
 from django.contrib import messages
 from django.http import JsonResponse
 from django.contrib.auth.forms import PasswordChangeForm
@@ -72,21 +71,22 @@ def profile(request, username):
             'is_following': is_following
         })
 
+# Follow/Unfollow Author or User Profile
 @login_required
 def toggle_follow(request, user_id):
     if request.method == "POST":
-        user_to_toggle = get_object_or_404(User, id=user_id)
+        author = get_object_or_404(User, id=user_id)
 
-        # Check existing follow relationship
-        existing_follow = Follow.objects.filter(follower=request.user, followed=user_to_toggle).first()
+        # Avoid IntegrityError by ensuring state consistency
+        existing_follow = Follow.objects.filter(follower=request.user, followed=author).first()
 
         if existing_follow:
-            # If already following, unfollow
+            # Already following, so unfollow
             existing_follow.delete()
             return JsonResponse({"success": True, "action": "unfollow"})
         else:
-            # If not following, follow
-            Follow.objects.get_or_create(follower=request.user, followed=user_to_toggle)
+            # Not following yet, so follow
+            Follow.objects.get_or_create(follower=request.user, followed=author)  # Avoid duplicate creation
             return JsonResponse({"success": True, "action": "follow"})
 
     return JsonResponse({"success": False}, status=400)
